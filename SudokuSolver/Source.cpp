@@ -6,7 +6,6 @@
 #include "Generator.h"
 #define GRID_SIZE 9
 const char fileName[]{ "SolutionFile.txt" };
-static int step = 1;
 
 void printBoard(int board[GRID_SIZE][GRID_SIZE]);
 void printBoard(int board[GRID_SIZE][GRID_SIZE], ofstream&);
@@ -19,7 +18,7 @@ void createFile(int board[GRID_SIZE][GRID_SIZE], string, double timeTaken = 0.0)
 
 int main() {
     int board[GRID_SIZE][GRID_SIZE]
-    {
+    /*{
         {0,0,0,8,0,0,0,7,0},
         {6,0,5,0,0,0,0,4,0},
         {0,2,0,0,1,0,5,0,0},
@@ -29,14 +28,14 @@ int main() {
         {4,0,0,0,2,7,8,0,0},
         {0,0,0,4,0,9,0,0,0},
         {0,3,9,0,0,0,0,0,0}
-    };
+    }*/;
 
-    /*
+    
     //generate new game using Generator class
     //class ref https://github.com/vaithak/Sudoku-Generator/blob/master/sudokuGen.cpp
     Generator gen;
     gen.generate(board);
-    */
+    
 
     //system("color 34");
     createFile(board, "Game befor solution");
@@ -83,7 +82,6 @@ void printBoard(int board[GRID_SIZE][GRID_SIZE], ofstream& SolutionFile) {
 }
 
 bool isValidNumber(int board[GRID_SIZE][GRID_SIZE], int number, int row, int column) {
-
     return (
         isValidRow(board, number, row) &&
         isValidColumn(board, number, column) &&
@@ -108,7 +106,6 @@ bool isValidColumn(int board[GRID_SIZE][GRID_SIZE], int number, int column) {
 }
 
 bool isValidBox(int board[GRID_SIZE][GRID_SIZE], int number, int row, int column) {
-
     int localBoxRow = row - row % 3;
     int localBoxColumn = column - column % 3;
 
@@ -120,6 +117,7 @@ bool isValidBox(int board[GRID_SIZE][GRID_SIZE], int number, int row, int column
 }
 
 bool solveBoard(int board[GRID_SIZE][GRID_SIZE]) {
+    static int step = 1;
     for (int row = 0; row < GRID_SIZE; row++) {
         for (int column = 0; column < GRID_SIZE; column++) {
             if (board[row][column] == 0) {
