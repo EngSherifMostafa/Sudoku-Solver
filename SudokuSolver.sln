@@ -5,6 +5,11 @@ VisualStudioVersion = 17.4.33110.190
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SudokuSolver", "SudokuSolver\SudokuSolver.vcxproj", "{C99A5121-499B-4CDF-A75C-B75058E1E9D3}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{CC51C746-6C52-4E1D-B84F-E912DCF9CFCD}"
+	ProjectSection(SolutionItems) = preProject
+		CodeMaps\CodeMap.dgml = CodeMaps\CodeMap.dgml
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64

@@ -7,7 +7,7 @@
 #define GRID_SIZE 9
 const char fileName[]{ "SolutionFile.txt" };
 
-void printBoard(int board[GRID_SIZE][GRID_SIZE]);
+bool checkUserInput(int, int board[GRID_SIZE][GRID_SIZE], int, int);
 void printBoard(int board[GRID_SIZE][GRID_SIZE], ofstream&);
 bool isValidNumber(int board[GRID_SIZE][GRID_SIZE], int, int, int);
 bool isValidRow(int board[GRID_SIZE][GRID_SIZE], int, int);
@@ -17,25 +17,56 @@ bool solveBoard(int board[GRID_SIZE][GRID_SIZE]);
 void createFile(int board[GRID_SIZE][GRID_SIZE], string, double timeTaken = 0.0);
 
 int main() {
-    int board[GRID_SIZE][GRID_SIZE]
-    /*{
-        {0,0,0,8,0,0,0,7,0},
-        {6,0,5,0,0,0,0,4,0},
-        {0,2,0,0,1,0,5,0,0},
-        {0,7,0,0,0,0,4,0,2},
-        {0,0,2,9,5,0,0,0,0},
-        {1,0,0,0,0,0,0,0,0},
-        {4,0,0,0,2,7,8,0,0},
-        {0,0,0,4,0,9,0,0,0},
-        {0,3,9,0,0,0,0,0,0}
-    }*/;
-
-    
-    //generate new game using Generator class
-    //class ref https://github.com/vaithak/Sudoku-Generator/blob/master/sudokuGen.cpp
+    bool invalid = false;
+    int board[GRID_SIZE][GRID_SIZE]{ 0 }, choose = 0;
     Generator gen;
-    gen.generate(board);
-    
+
+    //user choose
+    do {
+        try
+        {
+            std::cout <<
+                "1- Generate board.\n" <<
+                "2- Write your own board.\n" <<
+                "(1 / 2) : ";
+
+            std::cin >> choose;
+
+            if (choose != 1 && choose != 2) throw exception();
+        }
+
+        catch (...)
+        {
+            std::cout << "Unexpected selection !!\n\n";
+            std::cin.clear();
+            std::cin.ignore(1e10, '\n');
+            choose = 0;
+        }
+    } while (choose != 1 && choose != 2);
+
+    switch (choose) {
+    case 1:
+        //generate new game using Generator class
+        //class ref https://github.com/vaithak/Sudoku-Generator/blob/master/sudokuGen.cpp
+        gen.generate(board);
+        break;
+
+    case 2:
+        int temp = 0;
+        do {
+            invalid = false;
+            std::cout << "\n\nEnter 9 X 9 game board (valid numbers are from 0 - 9 only where 0 means empty)\n";
+
+            for (int row = 0; row < GRID_SIZE; row++) {
+                for (int column = 0; column < GRID_SIZE; column++) {
+                    std::cout << "( " << row + 1 << " , " << column + 1 << " ): ";
+                    cin >> temp;
+                    checkUserInput(temp, board, row, column);
+                }
+            }
+        } while (invalid);
+        break;
+    }
 
     //system("color 34");
     createFile(board, "Game befor solution");
@@ -47,21 +78,16 @@ int main() {
     return 0;
 }
 
-void printBoard(int board[GRID_SIZE][GRID_SIZE]) {
-    for (int row = 0; row < 9; row++) {
-        for (int column = 0; column < 9; column++) {
-            if (board[row][column] == 0)
-                std::cout << "  ";
-            else
-                std::cout << board[row][column] << " ";
+bool checkUserInput(int userNumber, int board[GRID_SIZE][GRID_SIZE], int row, int column) {
+    if (userNumber < 0 || userNumber > 9)
+        return false;
 
-            if ((column + 1) % 3 == 0)
-                std::cout << "| ";
-        }
-        std::cout << std::endl;
-        if ((row + 1) % 3 == 0)
-            std::cout << "------+-------+--------" << std::endl;
-    }
+    board[row][column] = userNumber;
+    
+    //clear buffer
+    std::cin.clear();
+    std::cin.ignore(1e10, '\n');
+    return true;
 }
 
 void printBoard(int board[GRID_SIZE][GRID_SIZE], ofstream& SolutionFile) {
@@ -125,7 +151,7 @@ bool solveBoard(int board[GRID_SIZE][GRID_SIZE]) {
                     if (isValidNumber(board, num, row, column)) {
                         board[row][column] = num;
                         createFile(board, "Step # " + std::to_string(step++));
-                        //recursion
+                        //recursion ( Backtracking Algorithm )
                         if (solveBoard(board))
                             return true;
                         else
